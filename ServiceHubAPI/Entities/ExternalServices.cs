@@ -5,13 +5,13 @@ namespace ServiceHubAPI.Entities
     public static class ExternalServices
     {
         public const string DroolsServiceName = "DroolsScoringService";
-        
-        public const string ModelID = "Linx_1.0.0-SNAPSHOT";
-        public const string CreditHistoryModelID = "RGC - Credit History";
-        public const string Financials = "RGC - Financials";
-        public const string BusinessOperations = "RGC - Business Operations";
-        public const string AdjustmentFactors = "RGC - Adjustment Factors - LTV";
-        public const string FinalScore = "RGC - Final Score";
+
+        //public const string ModelID = "Linx_1.0.0-SNAPSHOT";
+        //public const string CreditHistoryModelID = "RGC - Credit History";
+        //public const string Financials = "RGC - Financials";
+        //public const string BusinessOperations = "RGC - Business Operations";
+        //public const string AdjustmentFactors = "RGC - Adjustment Factors - LTV";
+        //public const string FinalScore = "RGC - Final Score";
     }
 
     public enum ServiceEnum

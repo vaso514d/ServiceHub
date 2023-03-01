@@ -12,16 +12,20 @@ namespace ServiceHubAPI.Controllers
     public class DroolesController : ControllerBase
     {
         private DroolesClient client;
-        private JsonSerializerOptions options = new JsonSerializerOptions
-        {
-            Encoder = JavaScriptEncoder.Default,
-            PropertyNameCaseInsensitive = true,
-            WriteIndented = true
-        };
+        private readonly IConfiguration configuration;
+        private JsonSerializerOptions options;
 
-        public DroolesController(IHttpClientFactory httpClientFactory)
+        public DroolesController(IHttpClientFactory httpClientFactory, IConfiguration configuration)
         {
             this.client = new DroolesClient(httpClientFactory);
+            this.configuration = configuration;
+            
+            options = new JsonSerializerOptions
+            {
+                Encoder = JavaScriptEncoder.Default,
+                PropertyNameCaseInsensitive = true,
+                WriteIndented = true
+            };
         }
 
         [Route("GeServerContainers")]
@@ -46,7 +50,11 @@ namespace ServiceHubAPI.Controllers
         [HttpPost]
         public IActionResult GetCreditHistoryDicision(CreditHistoryRequest request)
         {
-            var str = client.PostModelToGetDicision(ExternalServices.ModelID, ExternalServices.CreditHistoryModelID, JsonSerializer.Serialize(request, options)).Result;
+            var str = client.PostModelToGetDicision(
+                configuration.GetValue<string>("Drools:ModelID"),
+                configuration.GetValue<string>("Drools:CreditHistoryModelID"), 
+                JsonSerializer.Serialize(request, options)
+            ).Result;
             var score = JsonSerializer.Deserialize<CreditHistoryResponse>(str);
 
             return Ok(score);
@@ -56,7 +64,11 @@ namespace ServiceHubAPI.Controllers
         [HttpPost]
         public IActionResult GetFinancialsDicision(FinancialsCalculatorRequest request)
         {
-            var str = client.PostModelToGetDicision(ExternalServices.ModelID, ExternalServices.Financials, JsonSerializer.Serialize(request, options)).Result;
+            var str = client.PostModelToGetDicision(
+                configuration.GetValue<string>("Drools:ModelID"),
+                configuration.GetValue<string>("Drools:Financials"), 
+                JsonSerializer.Serialize(request, options)
+            ).Result;
             var score = JsonSerializer.Deserialize<FinancialsCalculatorResponse>(str);
 
             return Ok(score);
@@ -66,7 +78,11 @@ namespace ServiceHubAPI.Controllers
         [HttpPost]
         public IActionResult GetBusinessOperationsDicision(BusinessOperationsRequest request)
         {
-            var str = client.PostModelToGetDicision(ExternalServices.ModelID, ExternalServices.BusinessOperations, JsonSerializer.Serialize(request, options)).Result;
+            var str = client.PostModelToGetDicision(
+                configuration.GetValue<string>("Drools:ModelID"),
+                configuration.GetValue<string>("Drools:BusinessOperations"), 
+                JsonSerializer.Serialize(request, options)
+            ).Result;
             var score = JsonSerializer.Deserialize<BusinessOperationsResponse>(str);
 
             return Ok(score);
@@ -76,7 +92,11 @@ namespace ServiceHubAPI.Controllers
         [HttpPost]
         public IActionResult GetAdjustmentFactorsDicision(AdjustmentFactorsRequest request)
         {
-            var str = client.PostModelToGetDicision(ExternalServices.ModelID, ExternalServices.AdjustmentFactors, JsonSerializer.Serialize(request, options)).Result;
+            var str = client.PostModelToGetDicision(
+                configuration.GetValue<string>("Drools:ModelID"), 
+                configuration.GetValue<string>("Drools:AdjustmentFactors"), 
+                JsonSerializer.Serialize(request, options)
+            ).Result;
             var score = JsonSerializer.Deserialize<AdjustmentFactorsResponse>(str);
 
             return Ok(score);
@@ -86,16 +106,32 @@ namespace ServiceHubAPI.Controllers
         [HttpPost]
         public IActionResult GetScorringDicision(ScorringRequest request)
         {
-            var str = client.PostModelToGetDicision(ExternalServices.ModelID, ExternalServices.CreditHistoryModelID, JsonSerializer.Serialize(request.CreditHistory, options)).Result;
+            var str = client.PostModelToGetDicision(
+                configuration.GetValue<string>("Drools:ModelID"),
+                configuration.GetValue<string>("Drools:CreditHistoryModelID"), 
+                JsonSerializer.Serialize(request.CreditHistory, options)
+            ).Result;
             var creditHistory = JsonSerializer.Deserialize<CreditHistoryResponse>(str);
 
-            str = client.PostModelToGetDicision(ExternalServices.ModelID, ExternalServices.Financials, JsonSerializer.Serialize(request.FinancialsCalculator, options)).Result;
+            str = client.PostModelToGetDicision(
+                configuration.GetValue<string>("Drools:ModelID"), 
+                configuration.GetValue<string>("Drools:Financials"), 
+                JsonSerializer.Serialize(request.FinancialsCalculator, options)
+            ).Result;
             var financials = JsonSerializer.Deserialize<FinancialsCalculatorResponse>(str);
 
-            str = client.PostModelToGetDicision(ExternalServices.ModelID, ExternalServices.BusinessOperations, JsonSerializer.Serialize(request.BusinessOperations, options)).Result;
+            str = client.PostModelToGetDicision(
+                configuration.GetValue<string>("Drools:ModelID"), 
+                configuration.GetValue<string>("Drools:BusinessOperations"), 
+                JsonSerializer.Serialize(request.BusinessOperations, options)
+            ).Result;
             var businessOperations = JsonSerializer.Deserialize<BusinessOperationsResponse>(str);
 
-            str = client.PostModelToGetDicision(ExternalServices.ModelID, ExternalServices.AdjustmentFactors, JsonSerializer.Serialize(request.AdjustmentFactors, options)).Result;
+            str = client.PostModelToGetDicision(
+                configuration.GetValue<string>("Drools:ModelID"), 
+                configuration.GetValue<string>("Drools:AdjustmentFactors"), 
+                JsonSerializer.Serialize(request.AdjustmentFactors, options)
+            ).Result;
             var adjustmentFactors = JsonSerializer.Deserialize<AdjustmentFactorsResponse>(str);
 
             var finalRequest = new FinalScoreRequest
@@ -106,7 +142,11 @@ namespace ServiceHubAPI.Controllers
                 AdjustmentFactorsResponse = adjustmentFactors
             };
 
-            str = client.PostModelToGetDicision(ExternalServices.ModelID, ExternalServices.FinalScore, JsonSerializer.Serialize(finalRequest, options)).Result;
+            str = client.PostModelToGetDicision(
+                configuration.GetValue<string>("Drools:ModelID"), 
+                configuration.GetValue<string>("Drools:FinalScore"), 
+                JsonSerializer.Serialize(finalRequest, options)
+            ).Result;
             var finalScore = JsonSerializer.Deserialize<FinalScoreResponse>(str);
 
             return Ok(finalScore);
