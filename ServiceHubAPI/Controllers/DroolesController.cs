@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ServiceHubAPI.Clients;
-using ServiceHubAPI.Entities;
 using ServiceHubAPI.Entities.Scorring;
 using System.Text.Encodings.Web;
 using System.Text.Json;

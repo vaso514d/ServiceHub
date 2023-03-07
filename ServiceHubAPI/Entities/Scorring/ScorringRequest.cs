@@ -333,6 +333,9 @@ namespace ServiceHubAPI.Entities.Scorring
         [JsonPropertyName("Adjustment Factors Score")]
         public AdjustmentFactorsResponse AdjustmentFactorsResponse { get; set; }
 
+        [JsonPropertyName("RGC Grade")]
+        public string RGCGrade { get; set; }
+
         [JsonPropertyName("RGC Final Score")]
         public decimal RGCFinalScore { get; set; }
     }
